@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gexf xmlns="http://www.gephi.org/gexf" xmlns:viz="http://www.gephi.org/gexf/viz">
+  <graph type="static">
+    <nodes>
+      <node id="1" label="World">
+        <viz:color b="51" g="51" r="255"/>
+        <viz:position x="-113.203964" y="30.300962" z="0.0"/>
+        <viz:size value="3.6"/>
+        <attvalues />
+      </node>
+      <node id="0" label="hello">
+        <viz:color b="51" g="51" r="255"/>
+        <viz:position x="-81.7245" y="25.771425" z="0.0"/>
+        <viz:size value="10.138098"/>
+        <attvalues />
+      </node>
+    </nodes>
+    <edges>
+      <edge id="0" source="0" target="1" />
+    </edges>
+  </graph>
+</gexf>

@@ -1,0 +1,32 @@
+.drawing {
+    font: 10px sans-serif;
+}
+.axis path, .axis line {
+    fill: none;
+    shape-rendering: crispEdges;
+    stroke: #000;
+}
+.x.axis path {
+    display: none;
+}
+.line {
+    fill: none;
+    stroke: steelblue;
+    stroke-width: 1.5px;
+}
+.line2 {
+    fill: none;
+    stroke: green;
+    stroke-width: 1.5px;
+}
+.graph {
+    text-align: center;
+}
+.title {
+    font-size: 15px;
+    font-style: italic;
+}
+#BipartiteGraphThreadsAuthors {
+    height: 500px;
+    width: 500px;
+}

@@ -3,46 +3,12 @@
 	<head>
 		<meta charset="utf-8" />
 		<title>CCL visualizations</title>
-		<script src="https://code.jquery.com/jquery-2.1.1.min.js" charset="utf-8"></script>
-		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-		<script src="script.js" charset="utf-8"></script>
-		<style>
-			.drawing {
-			  font: 10px sans-serif;
-			}
-
-			.axis path,
-			.axis line {
-			  fill: none;
-			  shape-rendering: crispEdges;
-			  stroke: #000;
-			}
-
-			.x.axis path {
-			  display: none;
-			}
-
-			.line {
-			  fill: none;
-			  stroke: steelblue;
-			  stroke-width: 1.5px;
-			}
-
-			.line2 {
-			  fill: none;
-			  stroke: green;
-			  stroke-width: 1.5px;
-			}
-
-			.graph {
-				text-align: center;
-			}
-
-			.title {
-				font-size: 15px;
-				font-style: italic;
-			}
-		</style>
+		<script src="js/jquery-2.1.1.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/d3.v3.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/sigma.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/sigma.parsers.gexf.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="js/ccl.js" type="text/javascript" charset="utf-8"></script>
+		<link href="css/ccl.css" rel="stylesheet" type="text/css" />
 	</head>
 	<body>
 		<div class="graph graph01">
@@ -57,9 +23,17 @@
 			<div id="volumeOfXreferenceSettedByMonths" class="chart lineChart"></div>
 			<div class="title">Volume of X-Reference setted by months in 2001</div>
 		</div>
-		<div class="graph graph05">
+		<div class="graph graph04">
 			<div id="volumeOfThreadsLaunched" class="chart lineChart"></div>
 			<div class="title">Volume of threads launched between 1991 and 2014</div>
+		</div>
+		<div class="graph graph05">
+			<div id="volumeOfThreadsLaunchedByMonths" class="chart lineChart"></div>
+			<div class="title">Volume of threads launched by month in 2001</div>
+		</div>
+		<div class="graph graph06">
+			<div id="BipartiteGraphThreadsAuthors" class="network"></div>
+			<div class="title">Bipartite graph fot threads vs. authors</div>
 		</div>
 	</body>
 </html>

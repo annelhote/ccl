@@ -1,4 +1,5 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # python threading.py
 
 
@@ -10,10 +11,10 @@ from difflib import SequenceMatcher
 
 
 # Log the message level and the message into a log file
-# file		: file object	: the file into which write
-# level		: string 		: the log level of the message (info, warning, alert ...)
-# message 	: string 		: the message content to be logged
-# return 	: void
+# file				: file object	: the file into which write
+# level				: string 		: the log level of the message (info, warning, alert ...)
+# message 			: string 		: the message content to be logged
+# return 			: void
 def log(file, level, message):
 	message = datetime.datetime.now().strftime("%Y/%m/%d %H:%M:%S") + ' | ' + level + ' | ' + message + '\n'
 	file.write(unicode(message))
@@ -21,8 +22,8 @@ def log(file, level, message):
 
 # Normalize a string ie. transform it into lowercase, remove prepend 're:' and 'ccl:' and filter non alphanumeric character
 # Recursive function
-# title		: string 		: the string to normalize
-# return 	: string 		: the normalized title
+# title				: string 		: the string to normalize
+# return 			: string 		: the normalized title
 def normalize(title):
 	title	= string.lower(title)
 	search	= re.search('^ *(re|ccl) *: *(.*)', title, flags=re.IGNORECASE)
@@ -34,10 +35,10 @@ def normalize(title):
 
 # Attach a mail into a thread given its thread id
 # Update thread parameters according to mail parameter
-# mail		: object 		: email object to attachto a thread
-# threads	: iterator 		: iterator on a collection of threads
-# threadId 	: int 			: unique id to identify the thread into the threads collection
-# return 	: bool			: return true if the mail has really been added to the mails field of that thread, false otherwise, ie. if this mail id was already in that thread
+# mail				: object 		: email object to attachto a thread
+# threads			: iterator 		: iterator on a collection of threads
+# threadId 			: int 			: unique id to identify the thread into the threads collection
+# return 			: bool			: return true if the mail has really been added to the mails field of that thread, false otherwise, ie. if this mail id was already in that thread
 def addMailToThreadById(mail, threads, threadId):
 	# Retrieve list of mails ids already attached to this thread
 	currentThread 	= threads.find({'_id':threadId})[0]
@@ -62,14 +63,17 @@ def addMailToThreadById(mail, threads, threadId):
 
 # Attach a mail into the threads collection
 # Try to rattach the mail into an existing one if it is pertinent, otherwise create a new thread
-# mail		: object 		: email object to attachto a thread
-# threads	: iterator 		: iterator on a collection of threads
-# threashold: int 			: similarity threshold of acceptance between a thread title and a mail title
-# return 	: object		: Id of the thread into which the mail have been added
+# mail				: object 		: email object to attachto a thread
+# threads			: iterator 		: iterator on a collection of threads
+# threashold		: int 			: similarity threshold of acceptance between a thread title and a mail title
+# threadDuration	: int 			: validity duration of a thread
+# return 			: object		: Id of the thread into which the mail have been added
 def addMailToThreads(mail, threads, threshold, threadDuration):
 	completeTitle 	= mail['subject']
 	title 			= normalize(completeTitle)
-	for thread in threads.find({}):
+	sup				= mail['timestamp'] - threadDuration
+	inf				= mail['timestamp'] + threadDuration
+	for thread in threads.find({'startdate':{'$gt':sup},'enddate':{'$lt':inf}}):
 		if (thread['title'] != '' and SequenceMatcher(None, title, thread['title']).ratio() >= threshold) and (abs(mail['timestamp'] - thread['startdate']) <= threadDuration):
 			threadId = thread['_id']
 			addMailToThreadById(mail, threads, threadId)
@@ -80,10 +84,10 @@ def addMailToThreads(mail, threads, threshold, threadDuration):
 
 
 # Attach a list of mails into the same thread in the threads collection
-# mails		: array 		: array of mail object
-# threads	: iterator 		: iterator on a collection of threads
-# threashold: int 			: similarity threshold of acceptance between a thread title and a mail title
-# return 	: void
+# mails				: array 		: array of mail object
+# threads			: iterator 		: iterator on a collection of threads
+# threashold		: int 			: similarity threshold of acceptance between a thread title and a mail title
+# return 			: void
 def addMailsToThreads(mails, threads, threshold, threadDuration):
 	threadId = addMailToThreads(mails.pop(0), threads, threshold, threadDuration)
 	for mail in mails:
@@ -109,6 +113,7 @@ if __name__ == "__main__":
 	f = io.open('error.log', 'w', encoding='utf-8')
 	log(f, 'info', 'Start threading')
 
+	# for mail in mails.find({'url':{'$regex':'\?2001\+'}},timeout=False):
 	for mail in mails.find(timeout=False):
 		# 1. Check if a x-reference field is not empty
 		xreference = mail['X-Reference']

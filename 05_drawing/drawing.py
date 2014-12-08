@@ -1,4 +1,5 @@
-#!/usr/bin/python\+
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # python drawing.py
 
 # Imports
@@ -35,8 +36,7 @@ def extractData(year, month, day):
 	# Calculate percentage of not empty 'X-Reference'
 	dataXreferencePercent 		= "{0:.2f}".format(dataXreference / float(dataMails) * 100) if dataMails != 0 else 0
 	# Count all threads
-	dataThreads 				= threads.find({'startdate':{'$gt':startDate},'enddate':{'$lt':endDate}}).count()
-	dataThreads 				= 0
+	dataThreads 				= threads.find({'count':{'$gte':3},'startdate':{'$gt':startDate},'enddate':{'$lt':endDate}}).count()
 	return (dataMails, dataNoemailaddress, dataNoemailaddressPercent, dataXreference, dataXreferencePercent, dataThreads)
 
 
@@ -72,6 +72,6 @@ if __name__ == "__main__":
 	# Clean and update mails
 	data = interateOverTime(mails)
 	# Write results into a json file
-	f = io.open('data.json', 'w', encoding='utf-8')
+	f = io.open('data/data.json', 'w', encoding='utf-8')
 	f.write(unicode(json.dumps(data, separators=(',',':'), indent=4)))
 	f.close()

@@ -1,8 +1,11 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # python authoring.py
+
 
 # Imports
 from pymongo import MongoClient
+
 
 # Main
 if __name__ == "__main__":
@@ -15,6 +18,7 @@ if __name__ == "__main__":
 	# Clear all authors
 	authors.remove({})
 
+	# for mail in mails.find({'url':{'$regex':'\?2001\+'}}):
 	for mail in mails.find():
 		email = mail['email']
 		if authors.find({'email':email}).count() == 0:

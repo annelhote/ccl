@@ -1,15 +1,14 @@
-#!/usr/bin/python
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # python cleaning.py
 
+
 # Imports
-import codecs
-import json
-import re
-import time
-import sys
+import re, sys, json, time, codecs
 from dateutil import parser
 from pprint import pprint
 from pymongo import MongoClient
+
 
 def rewriteEmail(email):
 	email = email.lower()
@@ -51,9 +50,10 @@ def rewriteEmail(email):
 		emailTmp = re.sub(r'\.(.*?)at(.*?)\.', r'@', email)
 	if emailTmp == email:
 		emailTmp = re.sub(r'\[(.*?)at(.*?)\]', r'@', email)
-	if not re.search('@', emailTmp) or email == emailTmp:
-		pprint(email + ' => ' + emailTmp)
+	# if not re.search('@', emailTmp) or email == emailTmp:
+	#	pprint(email + ' => ' + emailTmp)
 	return emailTmp
+
 
 # Iterate over mails
 def cleanData(mails):
@@ -77,17 +77,15 @@ def cleanData(mails):
 			fieldSubject = ''
 		# Create new field email from "from" field
 		if 'from' in d:
+			before = d['from']
 			fieldFrom = re.sub(r'From: ', r'', d['from'])
 			fieldEmail = d['from'].lower()
-		else:
-			fieldFrom = ''
-			fieldEmail = ''
 		if re.search('href=\"mailto:(.*?)\" ', fieldEmail):
 			fieldEmail = re.search('href=\"mailto:(.*?)\" target', fieldEmail).group(1)
 			fieldEmail = re.sub(r'%40', r'@', fieldEmail)
 		else:
-			fieldEmail = ''
-			pprint('email not found')
+			fieldEmail = re.sub(r'<em>from</em>: ', r'', fieldEmail)
+			fieldEmail = re.sub(r'[^\w]', r'', fieldEmail)
 		fieldXMessageId = ''
 		fieldXReference = ''
 		if 'comments' in d:
@@ -110,6 +108,7 @@ def cleanData(mails):
 				}
 			}
 		)
+
 
 # Main
 if __name__ == "__main__":

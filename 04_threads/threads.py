@@ -3,6 +3,9 @@
 # python threading.py
 
 
+# @TODO : Change duration : 0 to duration : 1
+
+
 # Imports
 import re, string, io, datetime
 from pymongo import MongoClient

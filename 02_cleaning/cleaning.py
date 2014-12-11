@@ -50,8 +50,6 @@ def rewriteEmail(email):
 		emailTmp = re.sub(r'\.(.*?)at(.*?)\.', r'@', email)
 	if emailTmp == email:
 		emailTmp = re.sub(r'\[(.*?)at(.*?)\]', r'@', email)
-	# if not re.search('@', emailTmp) or email == emailTmp:
-	#	pprint(email + ' => ' + emailTmp)
 	return emailTmp
 
 

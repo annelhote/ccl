@@ -422,11 +422,13 @@ $(document).ready(
         });
 
         // Bipartite graph threads vs. authors
-        var s = sigma.parsers.gexf(
+        sigma.parsers.gexf(
             'data/ccl.gexf', {
                 container: 'BipartiteGraphThreadsAuthors'
+            },
+            function(s) {
+                s.startForceAtlas2({worker: true, barnesHutOptimize: true});
             }
         );
-        // s.startForceAtlas2({worker: true, barnesHutOptimize: false});
     }
 );

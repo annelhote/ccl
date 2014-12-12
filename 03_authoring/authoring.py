@@ -25,16 +25,19 @@ def log(file, level, message):
 # return			: void
 def mergeAuthors(email01, email02):
 	log(f, 'info', 'Merge email addresses : ' + email01 + ' and ' + email02)
-	if authorsCollection.find({'emails':email01,'deleted':{'$exists':False}}).count() == 1 and authors.find({'emails':{'$in':email02},'deleted':{'$exists':False}}).count() == 1:
-		author01 = authors.find({'emails':email,'deleted':{'$exists':False}})[0]
-		author02 = authors.find({'emails':email,'deleted':{'$exists':False}})[0]
+	if authorsCollection.find({'emails':email01,'deleted':{'$exists':False}}).count() == 1 and authorsCollection.find({'emails':email02,'deleted':{'$exists':False}}).count() == 1:
+		author01 = authorsCollection.find({'emails':email,'deleted':{'$exists':False}})[0]
+		author02 = authorsCollection.find({'emails':email,'deleted':{'$exists':False}})[0]
 		emails = author01['emails'] + author02['emails']
 		mails = author01['mails'] + author02['mails']
 		count = author01['count'] + author02['count']
 		startdate = author01['startdate'] if author01['startdate'] < author02['startdate'] else author02['startdate']
 		enddate = author01['enddate'] if author01['enddate'] > author02['enddate'] else author02['enddate']
 		# Insert the merged author into collection
-		authorsCollection.insert({'emails':emails,'mails':mails,'count':count,'startdate':startdate,'enddate':enddate,'merged':1})
+		try:
+			authorsCollection.insert({'emails':emails,'mails':mails,'count':count,'startdate':startdate,'enddate':enddate,'merged':1})
+		except:
+			log(f, 'error', 'Size of the list of emails to insert : ' + str(len(mails)))
 		# Mark both authors as deleted
 		authorsCollection.update({'_id':author01['_id']},{'$set':{'deleted':1}})
 		authorsCollection.update({'_id':author01['_id']},{'$set':{'deleted':1}})
@@ -80,12 +83,12 @@ if __name__ == "__main__":
 				similaremails = authorsCollection.find({'emails':{'$regex':'^' + trunk + '@'}})
 				for similaremail in similaremails:
 					if len(similaremail['emails']) > 1:
-						log(f,'error','The size of this author\'s emails is bigger than 1 : ' + author['_id'])
+						log(f,'error','The size of this author\'s emails is bigger than 1 : ' + str(author['_id']))
 					else:
 						# Merge them together
-						merge(email,similaremail['emails'][0])
+						mergeAuthors(email,similaremail['emails'][0])
 			else:
-				lof(f,'info','This email address has no @ : ' + email)
+				log(f,'info','This email address has no @ : ' + email)
 
 	# Close the log file
 	log(f, 'info', 'End authoring')
